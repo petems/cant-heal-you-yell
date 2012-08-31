@@ -58,13 +58,13 @@ local function FindUnitFor(who)
   if GetUnitName("target", true) == who then return "target" end
   if GetUnitName("focus", true) == who then return "focus" end
   
-  size = GetNumPartyMembers()
+  size = GetNumSubgroupMembers()
   if size > 0 then
     for i=1, size do
       if GetUnitName("party"..i, true) == who then return "party"..i end
     end
   end
-  size = GetNumRaidMembers()
+  size = GetNumGroupMembers()
   if size > 0 then
     for i=1, size do
       if GetUnitName("raid"..i, true) == who then return "raid"..i end
@@ -124,9 +124,9 @@ local function Broadcast(message)
     return
   end
 
-  if GetNumRaidMembers() > 0 then
+  if IsInRaid() then
     group = "RAID"
-  elseif GetNumPartyMembers() > 0 then
+  elseif GetNumSubgroupMembers() > 0 then
     group = "PARTY"
   
   else
