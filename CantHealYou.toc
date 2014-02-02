@@ -1,9 +1,9 @@
-## Interface: 50001
-## Title:  Can't Heal You 3.22
-## Version:  3.22
+## Interface: 50300
+## Title:  Can't Heal You 3.30
+## Version:  3.30
 ## Author: Travis S. Casey
 ## X-Email: efindel@gmail.com
-## X-Date: August 30, 2012
+## X-Date: February 1, 2014
 ## Notes: Attempts to automatically detect when someone is out of line of sight or range of a heal/buff and whisper them.
 ## SavedVariables: CantHealYou_Config
 ## SavedVariablesPerCharacter: CHYconfig
