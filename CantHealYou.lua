@@ -124,9 +124,7 @@ local function Broadcast(message)
     return
   end
 
-  if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-    group = "INSTANCE_CHAT"
-  elseif IsInRaid() then
+  if IsInRaid() then
     group = "RAID"
   elseif GetNumSubgroupMembers() > 0 then
     group = "PARTY"
