@@ -1,12 +1,12 @@
 -- CantHealYou
 
--- Attempts to automatically detect when you cast a healing spell or buff 
--- on a friendly target who is out of line of sight or range and whisper 
+-- Attempts to automatically detect when you cast a healing spell or buff
+-- on a friendly target who is out of line of sight or range and whisper
 -- them if they're in your party, raid, or guild.
 --
--- This can fail; if the target isn't in range and the interface knows 
--- it, then it doesn't actually try to cast the spell, so the addon can't 
--- detect the spellcast.  However, if that's the case, you should see the 
+-- This can fail; if the target isn't in range and the interface knows
+-- it, then it doesn't actually try to cast the spell, so the addon can't
+-- detect the spellcast.  However, if that's the case, you should see the
 -- red dot or number on the icon for the spell (in the default interface).
 --
 -- Range detection can be forced in a macro using the /chyw slash
@@ -20,7 +20,7 @@ local debugmode = false
 
 -- for detecting when heal spells can't be cast
 
--- look for losing control, gaining control (?), error events indicating a stun, 
+-- look for losing control, gaining control (?), error events indicating a stun,
 
 -- spells being interrupted
 
@@ -50,14 +50,14 @@ end
 
 local function FindUnitFor(who)
   local i, size
-  
+
   -- second parameter ("true" on these) indicates whether or not
   -- to give names qualified with -servername for players from
   -- other servers
   if GetUnitName("player", true) == who then return "player" end
   if GetUnitName("target", true) == who then return "target" end
   if GetUnitName("focus", true) == who then return "focus" end
-  
+
   size = GetNumSubgroupMembers()
   if size > 0 then
     for i=1, size do
@@ -82,11 +82,11 @@ local function Whisper(who, message)
   if not CHYconfig.InBattlegrounds then
     if ( UnitInBattleground("player") ~= nil ) then return end
   end
-  
+
   -- get the name for who to whisper
   local name = GetUnitName(who, true)
   name = gsub( name, " ", "")
-  
+
   Debug("Called Whisper for "..name.." with message "..message)
   if timestamp[name] and CHYconfig.Interval > 0 then
     local interval = time() - timestamp[name]
@@ -104,14 +104,14 @@ end
 -- tell party or raid something
 local function Broadcast(message)
   local group
-  
+
   if ( (message == nil) or (message == "") ) then
     Debug("Broadcast called with empty message.  Giving up.")
     return
   end
-    
+
   Debug("Broadcast called with message: "..message)
-  
+
   if UnitOnTaxi("player") then
     Debug("player is on taxi, won't broadcast")
     return
@@ -119,7 +119,7 @@ local function Broadcast(message)
   if not CHYconfig.InBattlegrounds then
     if ( UnitInBattleground("player") ~= nil ) then return end
   end
-  
+
   if not CHYconfig.Active then
     return
   end
@@ -128,10 +128,10 @@ local function Broadcast(message)
     group = "RAID"
   elseif GetNumSubgroupMembers() > 0 then
     group = "PARTY"
-  
+
   else
     -- we're not in a group, no one to broadcast to
-    
+
     return
   end
 
@@ -149,9 +149,9 @@ local function Broadcast(message)
 end
 
 local function DoTheWarn(who, spell, message)
-  if ( (message == nil) or (message == "") ) then 
+  if ( (message == nil) or (message == "") ) then
     Debug("DoTheWarn called for "..who.." with spell "..spell.." but no message.  Giving up.")
-    return 
+    return
   end
 
   Debug("DoTheWarn called for "..who.." with spell "..spell.." and condition "..message)
@@ -163,9 +163,9 @@ local function DoTheWarn(who, spell, message)
   if not UnitIsPlayer( who ) then Debug(who.." is not a player"); return end
   -- are we only doing our party/raid/guild?
   if CHYconfig.OnlyPartyRaidGuild then
-    if not (UnitInParty( who ) or UnitInRaid(who ) or UnitIsInMyGuild( who )) then 
+    if not (UnitInParty( who ) or UnitInRaid(who ) or UnitIsInMyGuild( who )) then
       Debug(who.." is not in party, raid or guild")
-      return 
+      return
     end
   end
   -- if we make it here, all "don't tell them" tests were passed
@@ -179,9 +179,9 @@ local failed = false
 
 local function SetDefault( key, value )
   Debug("checking to see if "..key.." is set")
-  if ( (CHYconfig[key] == nil) or (CHYconfig[key] == "") ) then 
+  if ( (CHYconfig[key] == nil) or (CHYconfig[key] == "") ) then
     Debug("was not set - setting to "..tostring(value))
-    CHYconfig[key] = value 
+    CHYconfig[key] = value
   end
   if CantHealYou_Config[key] == nil then
     CantHealYou_Config[key] = value
@@ -210,30 +210,30 @@ function CantHealYou_OnEvent(self, event, arg1, arg2, arg3, arg4)
     Debug("Event received: "..event)
     if event == "VARIABLES_LOADED" then
       -- older versions had "CantHealYou_Config", which is now used for global default config
-      -- if we don't have a per-character config (CHYconfig), but do have global, set 
+      -- if we don't have a per-character config (CHYconfig), but do have global, set
       -- per-character to the global config.  If we don't have a global config, create an
       -- empty one.
-      
+
       -- workaround for "disappearing config" problem.  First, check to see
       -- if all the config strings are "".  If they are, assume we have
       -- a "disappeared" config, and set the configuration to nil so the
       -- initialization code can create a new config.
       -- We only test the old config strings, so we won't throw errors on
-      -- upgrades from older versions.  
+      -- upgrades from older versions.
       if CantHealYou_Config then
         if CantHealYou_Config["OutOfRange"] == "" and CantHealYou_Config["LineOfSight"] == "" then
           CantHealYou_Config = nil
         end
       end
       if CHYconfig then
-        if CHYconfig["OutOfRange"] == "" and CHYconfig["LineOfSight"] == "" 
+        if CHYconfig["OutOfRange"] == "" and CHYconfig["LineOfSight"] == ""
         and CHYconfig["LostControl"] == "" and CHYconfig["GainedControl"] == ""
         and CHYconfig["AuraBounced"] == "" and CHYconfig["Interrupted"] == "" then
           CHYconfig = nil
         end
       end
-      
-      if not CHYconfig and CantHealYou_Config then 
+
+      if not CHYconfig and CantHealYou_Config then
         -- we copy each key/value pair in CantHealYou_Config to CHYconfig
         -- because CHYconfig = CantHealYou_Config would make them both
         -- point to the same table, and any alteration done to one would
@@ -269,24 +269,25 @@ function CantHealYou_OnEvent(self, event, arg1, arg2, arg3, arg4)
     elseif event == "UI_ERROR_MESSAGE" then
         local message
 
+        -- in legion now we have in arg1 = LE_GAME_ERR_SPELL_FAILED_S and in arg2 the message
         -- possible future additions:
         -- SPELL_FAILED_CUSTOM_ERROR_57  (Cycloned)
         -- SPELL_FAILED_CUSTOM_ERROR_54  (no target or target too far away)
         -- SPELL_FAILED_CUSTOM_ERROR_44  (rooted)
         -- SPELL_FAILED_CASTER_DEAD
-        -- SPELL_FAILED_CASTER_DEAD_FEMALE       
-        
-        Debug("error received: "..arg1)
-        if arg1 == ERR_OUT_OF_RANGE then
+        -- SPELL_FAILED_CASTER_DEAD_FEMALE
+
+        Debug("error received: "..arg2)
+        if arg2 == ERR_OUT_OF_RANGE then
           if not CHYconfig.DoOutOfRange then return end
           message = CHYconfig.OutOfRange
-        elseif arg1 == SPELL_FAILED_LINE_OF_SIGHT then
+        elseif arg2 == SPELL_FAILED_LINE_OF_SIGHT then
           if not CHYconfig.DoLineOfSight then return end
           message = CHYconfig.LineOfSight
-        elseif arg1 == SPELL_FAILED_AURA_BOUNCED then
+        elseif arg2 == SPELL_FAILED_AURA_BOUNCED then
           if not CHYconfig.DoAuraBounced then return end
           message = CHYconfig.AuraBounced
-        elseif arg1 == SPELL_FAILED_INTERRUPTED or arg1 == SPELL_FAILED_INTERRUPTED_COMBAT then
+        elseif arg2 == SPELL_FAILED_INTERRUPTED or arg2 == SPELL_FAILED_INTERRUPTED_COMBAT then
           if GetUnitSpeed("player") == 0 and incombat then
             -- player isn't moving, we'll assume something else interrupted
             Debug("interrupted!")
@@ -309,12 +310,12 @@ function CantHealYou_OnEvent(self, event, arg1, arg2, arg3, arg4)
     elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_REGEN_DISABLED" then
       -- entering or leaving combat, so clear timers
       timestamps = {}
-      if event == "PLAYER_REGEN_DISABLED" then 
+      if event == "PLAYER_REGEN_DISABLED" then
         Debug("entering combat")
         incombat = true
       else
         Debug("leaving combat")
-        incombat = false 
+        incombat = false
       end
     elseif event == "PLAYER_ROLES_ASSIGNED" then
       -- not used right now, but for possible future use
@@ -329,7 +330,7 @@ function CantHealYou_OnEvent(self, event, arg1, arg2, arg3, arg4)
     elseif event == "TAXIMAP_CLOSED" then
       -- when WoW puts you on a taxi, it sends PLAYER_CONTROL_LOST before
       -- UnitOnTaxi("player") will return true.  Thus, we have to use this
-      -- fake to detect whether control was lost because of using a 
+      -- fake to detect whether control was lost because of using a
       -- flight master.
       ontaxi = time()
     elseif event == "PLAYER_CONTROL_LOST" then
@@ -429,9 +430,9 @@ CantHealYouFrame:RegisterEvent("TAXIMAP_CLOSED")
 local function ShowOptionValue( name )
   local mytype = type( CHYconfig[name] )
   local UIvar = _G["CantHealYouOptions"..name]
-  
-  Debug("type of "..name.." is "..mytype)  
-  
+
+  Debug("type of "..name.." is "..mytype)
+
   -- all our boolean variables are displayed in checkboxes
   if mytype == "boolean" then
     UIvar:SetChecked( CHYconfig[name] )
@@ -447,7 +448,7 @@ end
 local function ShowDefaultValue( name )
   local mytype = type( CantHealYou_Config[name] )
   local UIvar = _G["CantHealYouOptions"..name]
-  
+
   if mytype == "boolean" then
     UIvar:SetChecked( CantHealYou_Config[name] )
   elseif mytype == "number" then
@@ -473,13 +474,13 @@ function CantHealYouOptions_OnShow()
   ShowOptionValue( "DoAuraBounced" )
   ShowOptionValue( "AuraBounced" )
   ShowOptionValue( "Interval" )
-  ShowOptionValue( "Version" )	
+  ShowOptionValue( "Version" )
 end
 
 function CantHealYouOptions_Save()
-  -- if all the string values are empty, something's gone wrong. Don't 
+  -- if all the string values are empty, something's gone wrong. Don't
   -- save.
-  
+
   if ((CantHealYouOptionsOutOfRange:GetText() == "") and
       (CantHealYouOptionsLineOfSight:GetText() == "") and
       (CantHealYouOptionsInterrupted:GetText() == "") and
@@ -498,23 +499,23 @@ function CantHealYouOptions_Save()
 
   CHYconfig.DoLineOfSight = toboolean( CantHealYouOptionsDoLineOfSight:GetChecked() )
   CHYconfig.LineOfSight = CantHealYouOptionsLineOfSight:GetText()
-  
+
   CHYconfig.DoInterrupted = toboolean( CantHealYouOptionsDoInterrupted:GetChecked() )
   CHYconfig.Interrupted = CantHealYouOptionsInterrupted:GetText()
-  
+
   CHYconfig.DoLostControl = toboolean( CantHealYouOptionsDoLostControl:GetChecked() )
   CHYconfig.LostControl = CantHealYouOptionsLostControl:GetText()
   CHYconfig.GainedControl = CantHealYouOptionsGainedControl:GetText()
 
   CHYconfig.DoAuraBounced = toboolean( CantHealYouOptionsDoAuraBounced:GetChecked() )
   CHYconfig.AuraBounced = CantHealYouOptionsAuraBounced:GetText()
-  
+
   CHYconfig.Interval = tonumber(CantHealYouOptionsInterval:GetText())
   if typeof(CHYconfig.Interval) ~= "number" then
-  
+
  CHYconfig.interval = 0
   end
-  
+
 end
 
 function CantHealYouOptions_OnLoad()
@@ -544,17 +545,17 @@ function CantHealYouOptions_SaveDefaults()
 
   CantHealYou_Config.DoLineOfSight = toboolean( CantHealYouOptionsDoLineOfSight:GetChecked() )
   CantHealYou_Config.LineOfSight = CantHealYouOptionsLineOfSight:GetText()
-  
+
   CantHealYou_Config.DoInterrupted = toboolean( CantHealYouOptionsDoInterrupted:GetChecked() )
   CantHealYou_Config.Interrupted = CanHealYouOptionsInterrupted:GetText()
-  
+
   CantHealYou_Config.DoLostControl = toboolean( CantHealYouOptionsDoLostControl:GetChecked() )
   CantHealYou_Config.LostControl = CantHealYouOptionsLostControl:GetText()
   CantHealYou_Config.GainedControl = CantHealYouOptionsGainedControl:GetText()
 
   CantHealYou_Config.DoAuraBounced = toboolean( CantHealYouOptionsDoAuraBounced:GetChecked() )
   CantHealYou_Config.AuraBounced = CantHealYouOptionsAuraBounced:GetText()
-  
+
   CantHealYou_Config.Interval = tonumber(CantHealYouOptionsInterval:GetText())
 end
 
