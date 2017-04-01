@@ -1,6 +1,6 @@
-## Interface: 70000
+## Interface: 70200
 ## Title:  Can't Heal You 3.40
-## Version:  3.40
+## Version:  3.41
 ## Author: Travis S. Casey, Cecile
 ## X-Email: jamedina@gmail.com
 ## X-Date: July 28, 2016
