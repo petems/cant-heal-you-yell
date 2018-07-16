@@ -148,7 +148,14 @@ local function Broadcast(message)
   SendChatMessage(message, group)
 end
 
-local function DoTheWarn(who, spell, message)
+local function DoTheWarn(who, spellOrId, message)
+
+  local spell = spellOrId
+
+  if tonumber(spell) ~= nil then
+   spell = _G.GetSpellInfo(spell)
+  end
+
   if ( (message == nil) or (message == "") ) then
     Debug("DoTheWarn called for "..who.." with spell "..spell.." but no message.  Giving up.")
     return
@@ -174,7 +181,7 @@ local function DoTheWarn(who, spell, message)
 
 end
 
-local currentspell = { ["spell"] = nil, ["rank"] = nil, ["target"] = nil }
+local currentspell = { ["spell"] = nil, ["target"] = nil }
 local failed = false
 
 local function SetDefault( key, value )
@@ -256,15 +263,14 @@ function CantHealYou_OnEvent(self, event, arg1, arg2, arg3, arg4)
       CHYconfig.Version = GetAddOnMetadata("CantHealYou", "Version")
       CantHealYouFrame:UnregisterEvent("VARIABLES_LOADED")
     elseif event == "UNIT_SPELLCAST_SENT" then
-        if arg1 == "player" then
-            currentspell.spell = arg2
-            currentspell.rank = arg3
-            currentspell.target = arg4
-            Debug(arg1.." is casting "..arg2.." "..arg3.." on "..arg4)
+        if arg1 == "player" and arg2 then
+            currentspell.spell = arg4
+            currentspell.target = arg2
+            Debug(arg1.." is casting "..arg4.." on "..arg2)
         end
     elseif event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_FAILED_QUIET" then
-        if arg1 == "player" and arg2 == currentspell.spell and arg3 == currentspell.rank then
-            Debug("cast of "..arg2.." "..arg3.." on "..currentspell.target.." failed")
+        if arg1 == "player" and arg4 == currentspell.spell and currentspell.target then
+            Debug("cast of "..arg4.." on "..currentspell.target.." failed")
         end
     elseif event == "UI_ERROR_MESSAGE" then
         local message
@@ -304,7 +310,6 @@ function CantHealYou_OnEvent(self, event, arg1, arg2, arg3, arg4)
           Debug("FindUnitFor returned unit "..mytarget)
           DoTheWarn( mytarget, currentspell.spell, message)
           currentspell.spell = nil
-          currentspell.rank = nil
           currentspell.target = nil
         end
     elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_REGEN_DISABLED" then
@@ -351,11 +356,10 @@ function CantHealYou_OnEvent(self, event, arg1, arg2, arg3, arg4)
       Broadcast(CHYconfig.LostControl)
     else
         -- UNIT_SPELLCAST_STOP, UNIT_SPELLCAST_CHANNEL_STOP, or UNIT_SPELLCAST_SUCCEEDED
-        if arg1 == "player" and arg2 == currentspell.spell and arg3 == currentspell.rank then
+        if arg1 == "player" and arg4 == currentspell.spell and currentspell.target then
             -- looks to be the spell we're keeping, so release it
-            Debug("cast of "..arg2.." "..arg3.." on "..currentspell.target.." ended")
+            Debug("cast of "..arg4.." on "..currentspell.target.." ended")
             currentspell.spell = nil
-            currentspell.rank = nil
             currentspell.target = nil
         end
         if incapacitated then
@@ -410,7 +414,7 @@ CantHealYouFrame:RegisterEvent("UNIT_SPELLCAST_FAILED")
 CantHealYouFrame:RegisterEvent("UNIT_SPELLCAST_FAILED_QUIET")
 CantHealYouFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 CantHealYouFrame:RegisterEvent("UNIT_SPELLCAST_STOP")
-CantHealYouFrame:RegisterEvent("UNIT_SPELLCAST_CHANNELED_STOP")
+CantHealYouFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
 CantHealYouFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED")
 CantHealYouFrame:RegisterEvent("PLAYER_CONTROL_LOST")
 CantHealYouFrame:RegisterEvent("PLAYER_CONTROL_GAINED")
