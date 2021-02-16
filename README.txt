@@ -1,8 +1,18 @@
-Can't Heal You README by efindel
+Can't Heal You (Yell Version) README by efindel
 
 Healers!  Ever tried to heal or buff someone, only they're out of range
 or out of your line of sight?  And in the middle of a fight, you're
 casting too fast and furious to take time to tell them?
+
+Notes about the update by nu_tastymint
+--------------------------------
+
+People seem to not like getting spam Whispers, especially in Raids! 
+
+So I changed this to use Yell instead of Whisper. So this AddOn will now
+only work in Instances, as AddOns can no longer do "Yell" outside of instances.
+
+If you prefer Whispers, use the original AddOn.
 
 Notes about the update by Cecile
 --------------------------------
@@ -15,17 +25,17 @@ My idea is not to take over this AddOn, but I'll maintain it until
 the day that the original author come back for the hiatus that he may
 be in.
 
-What Can't Heal You Does
+What Can't Heal You (Yell Version) Does
 ------------------------
 
-Well, Can't Heal You will help you out by whispering the target of your
+Well, Can't Heal You (Yell Version) will help you out by yelling the target of your
 spell when that happens to tell them what you're trying to cast on
 them, and why it isn't working, so they can try to move where you
 *can* heal them.  Or at least you can tell them afterwards, "What?
 You didn't see that twenty messages telling you you were out of my
 line of sight?"
 
-Beyond that, Can't Heal You can whisper people when you try to buff them
+Beyond that, Can't Heal You (Yell Version) can yell people when you try to buff them
 but they have a higher level buff already, when you're sheeped, silenced,
 or otherwise prevented from casting (in some cases, it may not know that
 you've been prevented from casting until you try to cast a spell), and
@@ -33,42 +43,42 @@ when you're interrupted while casting in combat.
 
 To keep from spamming random people you try to buff, it also checks to
 see if the spell's target is in your party, raid, or guild, and only
-whispers them if they're in one of those.
+yells them if they're in one of those.
 
-Can't Heal You will work in combination with Healbot, Grid+Clique, etc.
+Can't Heal You (Yell Version) will work in combination with Healbot, Grid+Clique, etc.
 -- since it detects the game events involved with spellcasting, it
 should work no matter how you cast the spell.  It also uses Blizzard's
 internal names for events and errors, so even if the interface hasn't
-been localized in your language, Can't Heal You will still send messages
+been localized in your language, Can't Heal You (Yell Version) will still send messages
 at the appropriate times.
 
 It's not just for healers, too -- it works for any buff, so you
-mages trying to hand out Arcane Intellect can automatically whisper
+mages trying to hand out Arcane Intellect can automatically yell
 people too!
 
-Can't Heal You has a configuration dialog that's merged into Blizzard's
+Can't Heal You (Yell Version) has a configuration dialog that's merged into Blizzard's
 configuration interface -- you can find it in the Addons tab, or you can
 go directly go it by using the command "/chy".  There, you can choose
-what things you want Can't Heal You to warn others about, change the
-messages that Can't Heal You gives, or even turn off Can't Heal You
+what things you want Can't Heal You (Yell Version) to warn others about, change the
+messages that Can't Heal You (Yell Version) gives, or even turn off Can't Heal You (Yell Version)
 entirely.  Each of your characters has their own configuration.
 
 
 Warnings and Gotchas
 --------------------
 
-Can't Heal You's detection of out of range casts has a problem.  If
+Can't Heal You (Yell Version)'s detection of out of range casts has a problem.  If
 your target is already out of range when you start to cast the spell,
 and the game knows this (that is, when it's showing a red "out of range"
 dot or number on the spell), the game won't even try to cast the spell.
-Since  Can't Heal You works by detecting the message the game sends to the
+Since  Can't Heal You (Yell Version) works by detecting the message the game sends to the
 server when you cast a spell and getting the target information from it,
 the automatic detection won't work then.  To work around this problem,
 you can use the "Manual Warning" method described further down.
 
-A second problem is that players won't get whispered for spells that don't
-directly target them.  For example, Holy Nova won't whisper anyone, since
-it's an AoE, not targeted.  Greater Blessing of Wisdom won't whisper
+A second problem is that players won't get yelled for spells that don't
+directly target them.  For example, Holy Nova won't yell anyone, since
+it's an AoE, not targeted.  Greater Blessing of Wisdom won't yell
 people who are the same class as the target, but aren't close enough,
 since they're not the actual target.
 
@@ -79,21 +89,21 @@ interrupted because you moved, and not to send warnings in that case.
 However, Blizzard doesn't provide a way for an addon to tell whether
 you're moving because you wanted to, or because something knocked you
 back.  Thus, if you're interrupted by a knockback ability, most likely
-Can't Heal You won't say anything about that to your target.
+Can't Heal You (Yell Version) won't say anything about that to your target.
 
 Lastly, sometimes WoW sends a message as soon as something happens that
 prevents you from casting, and sometimes it doesn't send one until you
 try to cast.  Thus, it's possible that if you're silenced or the like,
-Can't Heal You may not say anything until and unless you try to cast a
+Can't Heal You (Yell Version) may not say anything until and unless you try to cast a
 spell.  On the flip side, the same thing can happen when you recover
-from something that prevents you from casting -- Can't Heal You might not
+from something that prevents you from casting -- Can't Heal You (Yell Version) might not
 tell people you can cast again until you successfully cast a spell.
 
 
 Commands
 --------
 
-Can't Heal You has the following command-line commands:
+Can't Heal You (Yell Version) has the following command-line commands:
 
  /chy debug - Turns on debug mode.  This will show you a lot of stuff
               you probably won't care about.  Use the same command to
@@ -109,12 +119,12 @@ Can't Heal You has the following command-line commands:
 Manual warning -- for advanced users
 ------------------------------------
 
-As noted above, Can't Heal You doesn't see spellcasts if you're
+As noted above, Can't Heal You (Yell Version) doesn't see spellcasts if you're
 already out of range when you try to cast the spell.  However,
 there is a way to work around this if you're comfortable with
-macros, and are willing to use them for casting.  Can't Heal You
+macros, and are willing to use them for casting.  Can't Heal You (Yell Version)
 has a /chyw command you can use to check range, and automatically
-whisper someone if they're out of range.  You'd use it in a
+yell someone if they're out of range.  You'd use it in a
 macro like this:
 
 #showtooltip

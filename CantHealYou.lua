@@ -1,7 +1,7 @@
 -- CantHealYou
 
 -- Attempts to automatically detect when you cast a healing spell or buff
--- on a friendly target who is out of line of sight or range and whisper
+-- on a friendly target who is out of line of sight or range and yell
 -- them if they're in your party, raid, or guild.
 --
 -- This can fail; if the target isn't in range and the interface knows
@@ -27,7 +27,7 @@ local debugmode = false
 -- announce these events to party/raid if we're set to
 
 
--- keep track of the last time we whispered someone
+-- keep track of the last time we yelled someone
 
 local timestamp = {}
 
@@ -75,30 +75,30 @@ local function FindUnitFor(who)
   return who
 end
 
-local function Whisper(who, message)
-  -- if we're not active, we shouldn't be here.  But if we do get here, don't do the whisper!
+local function Yell(who, message)
+  -- if we're not active, we shouldn't be here.  But if we do get here, don't do the yell!
   if not CHYconfig.Active then return end
 
   if not CHYconfig.InBattlegrounds then
     if ( UnitInBattleground("player") ~= nil ) then return end
   end
 
-  -- get the name for who to whisper
+  -- get the name for who to yell
   local name = GetUnitName(who, true)
   name = gsub( name, " ", "")
 
-  Debug("Called Whisper for "..name.." with message "..message)
+  Debug("Called yell for "..name.." with message "..message)
   if timestamp[name] and CHYconfig.Interval > 0 then
     local interval = time() - timestamp[name]
-    Debug("last whispered "..who.." "..interval.." seconds ago")
+    Debug("last yelled "..who.." "..interval.." seconds ago")
     if interval < CHYconfig.Interval then
-      -- too soon, don't whisper
-      Debug("whispered "..name.." within last "..CHYconfig.Interval.." seconds, not whispering")
+      -- too soon, don't yell
+      Debug("yelled "..name.." within last "..CHYconfig.Interval.." seconds, not yelling")
       return
     end
   end
   timestamp[name] = time()
-  SendChatMessage(message, "WHISPER", nil, name)
+  SendChatMessage(message, "YELL")
 end
 
 -- tell party or raid something
@@ -166,7 +166,7 @@ local function DoTheWarn(who, spellOrId, message)
   if UnitIsUnit( who, "player" ) then Debug(who.." is player"); return end
   -- if they can attack us, we're not healing/buffing them, so forget it
   if UnitCanAttack( who, "player" ) then Debug(who.." can attack player"); return end
-  -- no point in trying to whisper an NPC
+  -- no point in trying to yell an NPC
   if not UnitIsPlayer( who ) then Debug(who.." is not a player"); return end
   -- are we only doing our party/raid/guild?
   if CHYconfig.OnlyPartyRaidGuild then
@@ -176,8 +176,8 @@ local function DoTheWarn(who, spellOrId, message)
     end
   end
   -- if we make it here, all "don't tell them" tests were passed
-  Debug("whisper "..who)
-  Whisper( who,  string.format( message, spell ) )
+  Debug("yell "..who)
+  yell( who,  string.format( message, spell ) )
 
 end
 
@@ -527,7 +527,7 @@ function CantHealYouOptions_OnLoad()
   CantHealYouOptionsListLabel:SetText( CHYstrings.UIsendwarningsfor )
   CantHealYouOptionsIntervalLabel:SetText( CHYstrings.UIinterval )
 
-  CantHealYouOptions.name = "Can't Heal You"
+  CantHealYouOptions.name = "Can't Heal You (Yell Version)"
   CantHealYouOptions.okay = function (self) CantHealYouOptions_Save() end
   CantHealYouOptions.cancel = nil
 

@@ -1,16 +1,16 @@
 ## Interface: 80000
-## Title:  Can't Heal You 3.43
-## Version:  3.43
-## Author: Travis S. Casey, Cecile
+## Title:  Can't Heal You (Yell Version) 4.0
+## Version:  4.0
+## Author: Travis S. Casey, Cecile, nu_tastymint
 ## X-Email: jamedina@gmail.com
-## X-Date: July 28, 2016
-## Notes: Attempts to automatically detect when someone is out of line of sight or range of a heal/buff and whisper them.
+## X-Date: Febuary 16th 2021
+## Notes: Attempts to automatically detect when someone is out of line of sight or range of a heal/buff and yell it out
 ## SavedVariables: CantHealYou_Config
 ## SavedVariablesPerCharacter: CHYconfig
-## X-Curse-Packaged-Version: v3.43
-## X-Curse-Project-Name: Can't Heal You
-## X-Curse-Project-ID: cant-heal-you
-## X-Curse-Repository-ID: wow/cant-heal-you/mainline
+## X-Curse-Packaged-Version: v4.0
+## X-Curse-Project-Name: Can't Heal You (Yell Version)
+## X-Curse-Project-ID: cant-heal-you-yell-version
+## X-Curse-Repository-ID: wow/cant-heal-you-yell-version/mainline
 localization-en.lua
 CantHealYou.lua
 CantHealYou.xml

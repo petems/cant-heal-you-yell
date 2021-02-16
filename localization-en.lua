@@ -1,4 +1,4 @@
--- Can't Heal You localization - English
+-- Can't Heal You (Yell Version) localization - English
 
 -- to localize for other languages:
 
@@ -24,7 +24,7 @@ CHYstrings = {
 
 ["Interrupted"] = "casting %s on you, but I was interrupted!",
 
-["UItitle"] = "Can't Heal You",
+["UItitle"] = "Can't Heal You (Yell Version)",
 
 ["UImasterswitch"] = "Master Switch",
 
